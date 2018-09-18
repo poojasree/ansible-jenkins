@@ -1,6 +1,9 @@
 ---
 
 - name: Ensure jenkins home dir is created
+  become: yes
+  become_method: sudo
+  become_user: root
   file:
     path: "{{ jenkins_home }}"
     mode: 0777
@@ -9,6 +12,9 @@
     state: directory
 
 - name: Container is running (with ingress port)
+  become: yes
+  become_method: sudo
+  become_user: root
   docker_container:
     name: "{{ jenkins_docker_container_name }}"
     image: "{{ jenkins_docker_image }}:{{ jenkins_version }}"
@@ -20,6 +26,7 @@
       JAVA_OPTS: "{{ jenkins_java_opts }}"
   register: container_result
   when: jenkins_docker_expose_port
+
 
 - name: Container is running (without ingress port)
   docker_container:
